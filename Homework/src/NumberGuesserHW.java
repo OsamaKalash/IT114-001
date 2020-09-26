@@ -90,7 +90,8 @@ public class NumberGuesserHW {
 
 	private void saveLevel() {
 		try (FileWriter fw = new FileWriter(saveFile)) {
-			fw.write("" + level);// here we need to convert it to a String to record correctly
+			fw.write("" + level + " " + strikes + " " + number);// here we need to convert it to a String to record
+																// correctly
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,9 +106,24 @@ public class NumberGuesserHW {
 		try (Scanner reader = new Scanner(file)) {
 			while (reader.hasNextLine()) {
 				int _level = reader.nextInt();
+
 				if (_level > 1) {
 					level = _level;
-					break;
+
+				}
+
+				int currStrikes = reader.nextInt();
+
+				if (currStrikes >= 0) {
+					strikes = currStrikes;
+
+				}
+
+				int _num = reader.nextInt();
+
+				if (_num > 0) {
+					number = _num;
+
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -123,12 +139,26 @@ public class NumberGuesserHW {
 	void run() {
 		try (Scanner input = new Scanner(System.in);) {
 			System.out.println("Welcome to Number Guesser 4.0!");
+			System.out.println(
+					"Would you like to turn on hard mode? This will add 50 to your current level count. Type y for yes or n for no");
+
+			String reply = input.nextLine();
+
+			if (reply.equals("Y") || reply.equals("y")) {
+				level += 20;
+				System.out.println("Good luck soldier!");
+			} else if (reply == "n" || reply == "N") {
+				System.out.println("Yeah that's what I thought.");
+			}
+
 			System.out.println("I'll ask you to guess a number between a range, and you'll have " + maxStrikes
 					+ " attempts to guess.");
 			if (loadLevel()) {
 				System.out.println("Successfully loaded level " + level + " let's continue then");
 			}
+
 			number = getNumber(level);
+
 			isRunning = true;
 			while (input.hasNext()) {
 				String message = input.nextLine();
