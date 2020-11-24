@@ -3,6 +3,7 @@ package server;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +16,10 @@ public class Room implements AutoCloseable {
 	private final static String COMMAND_TRIGGER = "/";
 	private final static String CREATE_ROOM = "createroom";
 	private final static String JOIN_ROOM = "joinroom";
+	private final static String ROLL = "roll";
+	private final static String FLIP = "flip";
+
+	Random rand = new Random();
 
 	public Room(String name) {
 		this.name = name;
@@ -117,6 +122,23 @@ public class Room implements AutoCloseable {
 				case JOIN_ROOM:
 					roomName = comm2[1];
 					joinRoom(roomName, client);
+					wasCommand = true;
+					break;
+				case ROLL:
+					int num = rand.nextInt((6 - 1) + 1) + 1;
+					String number = "" + num + "";
+					sendMessage(client, "<i>you rolled a " + number + "!</i>");
+					wasCommand = true;
+					break;
+				case FLIP:
+					int coin = rand.nextInt((2 - 1) + 1) + 1;
+					String side = null;
+					if (coin == 1)
+						side = "heads";
+					else if (coin == 2)
+						side = "tails";
+
+					sendMessage(client, "<i>your coin landed on " + side + "!</i>");
 					wasCommand = true;
 					break;
 				}
