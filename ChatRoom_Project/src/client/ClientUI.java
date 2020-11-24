@@ -251,6 +251,18 @@ public class ClientUI extends JFrame implements Event {
 
 		str = str.replace("<u> ", "</u> ");
 
+		int ccount = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '@') {
+				ccount++;
+			}
+		}
+		if (ccount >= 2) {
+			str = str.replace("@", "<font color=blue>");
+		}
+
+		str = str.replace("<font color=blue> ", "</font> ");
+
 		entry.setText(str);
 
 		Dimension d = new Dimension(textArea.getSize().width, calcHeightForText(str));
