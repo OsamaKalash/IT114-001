@@ -127,7 +127,7 @@ public class Room implements AutoCloseable {
 				case ROLL:
 					int num = rand.nextInt((6 - 1) + 1) + 1;
 					String number = "" + num + "";
-					sendMessage(client, "you rolled a " + number + "!");
+					sendMessage(client, "<i>you rolled a " + number + "!</i>");
 					wasCommand = true;
 					break;
 				case FLIP:
@@ -138,7 +138,7 @@ public class Room implements AutoCloseable {
 					else if (coin == 2)
 						side = "tails";
 
-					sendMessage(client, "your coin landed on " + side + "!");
+					sendMessage(client, "<i>your coin landed on " + side + "!</i>");
 					wasCommand = true;
 					break;
 				}
