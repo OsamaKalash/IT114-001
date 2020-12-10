@@ -69,6 +69,18 @@ public class ClientUI extends JFrame implements Event {
 		panel.add(portLabel);
 		panel.add(port);
 		JButton button = new JButton("Next");
+		port.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "sendAction");
+		port.getActionMap().put("sendAction", new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				button.doClick();
+			}
+		});
+		host.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "sendAction");
+		host.getActionMap().put("sendAction", new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				button.doClick();
+			}
+		});
 		button.addActionListener(new ActionListener() {
 
 			@Override
@@ -100,6 +112,12 @@ public class ClientUI extends JFrame implements Event {
 		panel.add(userLabel);
 		panel.add(username);
 		JButton button = new JButton("Join");
+		username.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "sendAction");
+		username.getActionMap().put("sendAction", new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				button.doClick();
+			}
+		});
 		button.addActionListener(new ActionListener() {
 
 			@Override
@@ -130,6 +148,7 @@ public class ClientUI extends JFrame implements Event {
 
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.X_AXIS));
+
 		JTextField text = new JTextField();
 		input.add(text);
 		JButton button = new JButton("Send");
@@ -253,12 +272,12 @@ public class ClientUI extends JFrame implements Event {
 
 		int ccount = 0;
 		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == '@') {
+			if (str.charAt(i) == '%') {
 				ccount++;
 			}
 		}
 		if (ccount >= 2) {
-			str = str.replace("@", "<font color=blue>");
+			str = str.replace("%", "<font color=blue>");
 		}
 
 		str = str.replace("<font color=blue> ", "</font> ");
