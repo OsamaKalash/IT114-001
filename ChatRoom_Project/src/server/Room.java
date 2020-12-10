@@ -3,6 +3,7 @@ package server;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,8 +14,15 @@ public class Room implements AutoCloseable {
 
 	// Commands
 	private final static String COMMAND_TRIGGER = "/";
+	private final static String PM_TRIGGER = "@";
 	private final static String CREATE_ROOM = "createroom";
 	private final static String JOIN_ROOM = "joinroom";
+	private final static String ROLL = "roll";
+	private final static String FLIP = "flip";
+	private final static String MUTE = "mute";
+	private final static String UNMUTE = "unmute";
+
+	Random rand = new Random();
 
 	public Room(String name) {
 		this.name = name;
@@ -102,10 +110,12 @@ public class Room implements AutoCloseable {
 				String part1 = comm[1];
 				String[] comm2 = part1.split(" ");
 				String command = comm2[0];
+
 				if (command != null) {
 					command = command.toLowerCase();
 				}
 				String roomName;
+				String clientName;
 				switch (command) {
 				case CREATE_ROOM:
 					roomName = comm2[1];
@@ -119,11 +129,62 @@ public class Room implements AutoCloseable {
 					joinRoom(roomName, client);
 					wasCommand = true;
 					break;
+				case ROLL:
+					int num = rand.nextInt((6 - 1) + 1) + 1;
+					String number = "" + num + "";
+					sendMessage(client, "<i>you rolled a " + number + "!</i>");
+					wasCommand = true;
+					break;
+				case FLIP:
+					int coin = rand.nextInt((2 - 1) + 1) + 1;
+					String side = null;
+					if (coin == 1)
+						side = "heads";
+					else if (coin == 2)
+						side = "tails";
+
+					sendMessage(client, "<i>your coin landed on " + side + "!</i>");
+					wasCommand = true;
+					break;
+				case MUTE:
+					clientName = comm2[1];
+					if (!client.getClientName().contentEquals(clientName)) {
+						client.mutedUsers.add(clientName);
+					}
+
+					wasCommand = true;
+					break;
+				case UNMUTE:
+					clientName = comm2[1];
+					if (!client.getClientName().contentEquals(clientName)) {
+						client.mutedUsers.remove(clientName);
+					}
+					wasCommand = true;
+					break;
+				case "pm":
+					List<String> PmUsers = new ArrayList<String>();
+					PmUsers.add(client.getClientName());
+					String newMess = message.replace("/pm", "");
+					String[] words = message.split(" ");
+					for (String word : words) {
+						if (word.contains("@")) {
+							String name = word.replace("@", "").toLowerCase();
+							PmUsers.add(name);
+						}
+					}
+
+					sendPm(client, newMess, PmUsers);
+					wasCommand = true;
+					break;
 				}
 			}
-		} catch (Exception e) {
+
+		} catch (
+
+		Exception e) {
 			e.printStackTrace();
 		}
+
 		return wasCommand;
 	}
 
@@ -157,11 +218,33 @@ public class Room implements AutoCloseable {
 		Iterator<ServerThread> iter = clients.iterator();
 		while (iter.hasNext()) {
 			ServerThread client = iter.next();
-			boolean messageSent = client.send(sender.getClientName(), message);
-			if (!messageSent) {
-				iter.remove();
-				log.log(Level.INFO, "Removed client " + client.getId());
+			if (!client.isMuted(sender.getClientName())) {
+				boolean messageSent = client.send(sender.getClientName(), message);
+				if (!messageSent) {
+					iter.remove();
+					log.log(Level.INFO, "Removed client " + client.getId());
+
+				}
 			}
+		}
+	}
+
+	protected void sendPm(ServerThread sender, String message, List<String> users) {
+		log.log(Level.INFO, getName() + ": Sending message to " + clients.size() + " clients");
+		if (processCommands(message, sender)) { // it was a command,don't broadcast
+			return;
+		}
+		Iterator<ServerThread> iter = clients.iterator();
+		while (iter.hasNext()) {
+			ServerThread client = iter.next();
+			if (users.contains(client.getClientName())) {
+				boolean messageSent = client.send(sender.getClientName(), message);
+				if (!messageSent) {
+					iter.remove();
+					log.log(Level.INFO, "Removed client " + client.getId());
+				}
+			}
+
 		}
 	}
 

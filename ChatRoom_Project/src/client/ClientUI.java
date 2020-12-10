@@ -37,6 +37,7 @@ public class ClientUI extends JFrame implements Event {
 	ClientUI self;
 	JPanel textArea;
 	JPanel userPanel;
+	JPanel roomPanel;
 	List<User> users = new ArrayList<User>();
 	private final static Logger log = Logger.getLogger(ClientUI.class.getName());
 	Dimension windowSize = new Dimension(400, 400);
@@ -68,6 +69,18 @@ public class ClientUI extends JFrame implements Event {
 		panel.add(portLabel);
 		panel.add(port);
 		JButton button = new JButton("Next");
+		port.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "sendAction");
+		port.getActionMap().put("sendAction", new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				button.doClick();
+			}
+		});
+		host.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "sendAction");
+		host.getActionMap().put("sendAction", new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				button.doClick();
+			}
+		});
 		button.addActionListener(new ActionListener() {
 
 			@Override
@@ -99,6 +112,12 @@ public class ClientUI extends JFrame implements Event {
 		panel.add(userLabel);
 		panel.add(username);
 		JButton button = new JButton("Join");
+		username.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "sendAction");
+		username.getActionMap().put("sendAction", new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				button.doClick();
+			}
+		});
 		button.addActionListener(new ActionListener() {
 
 			@Override
@@ -129,6 +148,7 @@ public class ClientUI extends JFrame implements Event {
 
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.X_AXIS));
+
 		JTextField text = new JTextField();
 		input.add(text);
 		JButton button = new JButton("Send");
@@ -213,8 +233,57 @@ public class ClientUI extends JFrame implements Event {
 	void addMessage(String str) {
 		JEditorPane entry = new JEditorPane();
 		entry.setEditable(false);
-		// entry.setLayout(null);
+		entry.setContentType("text/html");
+		int bcount = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '*') {
+				bcount++;
+			}
+		}
+		if (bcount >= 2) {
+			str = str.replace("*", "<b>");
+		}
+
+		str = str.replace("<b> ", "</b> ");
+
+		int icount = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '-') {
+				icount++;
+			}
+		}
+		if (icount >= 2) {
+			str = str.replace("-", "<i>");
+		}
+
+		str = str.replace("<i> ", "</i> ");
+
+		int ucount = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '_') {
+				ucount++;
+			}
+		}
+		if (ucount >= 2) {
+			str = str.replace("_", "<u>");
+		}
+
+		str = str.replace("<u> ", "</u> ");
+
+		int ccount = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '%') {
+				ccount++;
+			}
+		}
+		if (ccount >= 2) {
+			str = str.replace("%", "<font color=blue>");
+		}
+
+		str = str.replace("<font color=blue> ", "</font> ");
+
 		entry.setText(str);
+
 		Dimension d = new Dimension(textArea.getSize().width, calcHeightForText(str));
 		// attempt to lock all dimensions
 		entry.setMinimumSize(d);
