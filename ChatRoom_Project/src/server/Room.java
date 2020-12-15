@@ -14,7 +14,7 @@ public class Room implements AutoCloseable {
 
 	// Commands
 	private final static String COMMAND_TRIGGER = "/";
-	private final static String PM_TRIGGER = "@";
+	// private final static String PM_TRIGGER = "@";
 	private final static String CREATE_ROOM = "createroom";
 	private final static String JOIN_ROOM = "joinroom";
 	private final static String ROLL = "roll";
@@ -102,6 +102,7 @@ public class Room implements AutoCloseable {
 	 *                triggering the actions)
 	 */
 	private boolean processCommands(String message, ServerThread client) {
+
 		boolean wasCommand = false;
 		try {
 			if (message.indexOf(COMMAND_TRIGGER) > -1) {
@@ -148,19 +149,57 @@ public class Room implements AutoCloseable {
 					break;
 				case MUTE:
 					clientName = comm2[1];
-					if (!client.getClientName().contentEquals(clientName)) {
-						client.mutedUsers.add(clientName);
+					ServerThread muted = null;
+					for (ServerThread c : clients) {
+						if (c.getClientName().equals(clientName)) {
+							muted = c;
+						}
 					}
+					if (muted == null) {
+						client.send("System", "That user doesn't exist!");
+						wasCommand = true;
+						break;
+					} else if (!client.mutedUsers.contains(clientName)) {
+						if (!client.getClientName().equals(clientName)) {
+							client.mutedUsers.add(clientName);
+						} else {
+							client.send("System", "You can't mute yourself!");
+							wasCommand = true;
+							break;
+						}
 
+						// onIsMuted(clientName, client.isMuted(clientName));
+						client.send("System", clientName + " is now muted");
+						muted.send("System", "You were muted by " + client.getClientName());
+						//client.saveMuted();
+
+					} else {
+						client.send("System", "That user is already muted!");
+					}
 					wasCommand = true;
 					break;
 				case UNMUTE:
 					clientName = comm2[1];
-					if (!client.getClientName().contentEquals(clientName)) {
-						client.mutedUsers.remove(clientName);
+					ServerThread unmuted = null;
+					if (client.mutedUsers.contains(clientName)) {
+						if (!client.getClientName().equals(clientName)) {
+							client.mutedUsers.remove(clientName);
+						}
+						for (ServerThread c : clients) {
+							if (c.getClientName().equals(clientName)) {
+								unmuted = c;
+							}
+						}
+						// client.onIsMuted(clientName, client.isMuted(clientName));
+						client.send("System", clientName + " is now unmuted");
+						unmuted.send("System", "You were unmuted by " + client.getClientName());
+						//client.saveMuted();
+					} else {
+						client.send("System", "That user is not muted!");
 					}
 					wasCommand = true;
 					break;
+
 				case "pm":
 					List<String> PmUsers = new ArrayList<String>();
 					PmUsers.add(client.getClientName());
@@ -231,13 +270,14 @@ public class Room implements AutoCloseable {
 
 	protected void sendPm(ServerThread sender, String message, List<String> users) {
 		log.log(Level.INFO, getName() + ": Sending message to " + clients.size() + " clients");
-		if (processCommands(message, sender)) { // it was a command,don't broadcast
+		if (processCommands(message, sender)) {
+			// it was a command,don't broadcast
 			return;
 		}
 		Iterator<ServerThread> iter = clients.iterator();
 		while (iter.hasNext()) {
 			ServerThread client = iter.next();
-			if (users.contains(client.getClientName())) {
+			if (!client.isMuted(sender.getClientName()) && users.contains(client.getClientName())) {
 				boolean messageSent = client.send(sender.getClientName(), message);
 				if (!messageSent) {
 					iter.remove();

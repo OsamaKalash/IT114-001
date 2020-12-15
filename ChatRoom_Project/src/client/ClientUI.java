@@ -8,6 +8,8 @@ import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -170,11 +172,27 @@ public class ClientUI extends JFrame implements Event {
 			}
 
 		});
+		
 		input.add(button);
 		panel.add(input, BorderLayout.SOUTH);
 		this.add(panel);
-	}
+		/*
+		JButton expButton = new JButton("Export Chat");
+		expButton.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exportChat();
+			}
+
+		});
+		input.add(expButton);
+		
+		panel.add(input, BorderLayout.SOUTH);
+		this.add(panel);
+		*/
+	}
+	
 	void createPanelUserList() {
 		userPanel = new JPanel();
 		userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
@@ -296,7 +314,22 @@ public class ClientUI extends JFrame implements Event {
 		JScrollBar sb = ((JScrollPane) textArea.getParent().getParent()).getVerticalScrollBar();
 		sb.setValue(sb.getMaximum());
 	}
-
+	/*
+	public void onIsMuted(String clientName, boolean muted) {
+		Iterator<User> iter = users.iterator();
+		while (iter.hasNext()) {
+			User user = iter.next();
+			if (user.getName().equalsIgnoreCase(clientName)) {
+				if (muted) {
+					user.name = "<font color=grey>%s</font>";
+				} else {
+					user.name = "<font color=black>%s</font>";
+				}
+				break;
+			}
+		}
+	}
+*/
 	void next() {
 		card.next(this.getContentPane());
 	}
@@ -318,7 +351,28 @@ public class ClientUI extends JFrame implements Event {
 		userPanel.setMaximumSize(lock);
 		setVisible(true);
 	}
+/*
+	void exportChat() {
+		StringBuilder sb = new StringBuilder();
+		Component[] components = textArea.getComponents();
+		for (Component comp : components) {
+			JEditorPane jedit = (JEditorPane) comp;
+			if (jedit != null) {
+				sb.append(jedit.getText() + System.lineSeparator());
+			}
+		}
+		String history = sb.toString();
+		try {
+			File chatHist = new File("Chat_History.txt");
+			FileWriter writer = new FileWriter("Chat_History.txt");
+			writer.write(history);
+			writer.close();
 
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+	}
+*/
 	@Override
 	public void onClientConnect(String clientName, String message) {
 		log.log(Level.INFO, String.format("%s: %s", clientName, message));

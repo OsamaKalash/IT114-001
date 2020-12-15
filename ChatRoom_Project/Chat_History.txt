@@ -1,0 +1,72 @@
+<html>
+  <head>
+    
+  </head>
+  <body>
+    osama: joined the room Lobby
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    joe: joined the room Lobby
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    mike: joined the room Lobby
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    osama: hi
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    joe: hey
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    mike: hello
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    System: joe is now muted
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    System: You were muted by joe
+  </body>
+</html>
+
