@@ -2,6 +2,7 @@ package client;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -314,22 +315,23 @@ public class ClientUI extends JFrame implements Event {
 		JScrollBar sb = ((JScrollPane) textArea.getParent().getParent()).getVerticalScrollBar();
 		sb.setValue(sb.getMaximum());
 	}
-	/*
+	
 	public void onIsMuted(String clientName, boolean muted) {
 		Iterator<User> iter = users.iterator();
 		while (iter.hasNext()) {
 			User user = iter.next();
 			if (user.getName().equalsIgnoreCase(clientName)) {
 				if (muted) {
-					user.name = "<font color=grey>%s</font>";
+					//user.name = "<font color=grey>%s</font>";
+					user.setForeground(Color.gray);
 				} else {
-					user.name = "<font color=black>%s</font>";
+					//user.name = "<font color=black>%s</font>";
+					user.setForeground(Color.white);
 				}
 				break;
 			}
 		}
 	}
-*/
 	void next() {
 		card.next(this.getContentPane());
 	}
@@ -402,7 +404,22 @@ public class ClientUI extends JFrame implements Event {
 	public void onMessageReceive(String clientName, String message) {
 		log.log(Level.INFO, String.format("%s: %s", clientName, message));
 		self.addMessage(String.format("%s: %s", clientName, message));
-	}
+		Iterator<User> iter = users.iterator();
+		while (iter.hasNext()) {
+			User u = iter.next();
+			if (u.getName() == clientName) {
+				u.setForeground(Color.yellow);
+				break;
+			}
+			else {
+				u.setForeground(Color.black);
+				break;
+			}
+			
+			}
+
+		}
+	
 
 	@Override
 	public void onChangeRoom() {
@@ -420,4 +437,5 @@ public class ClientUI extends JFrame implements Event {
 			log.log(Level.FINE, "Started");
 		}
 	}
+	
 }

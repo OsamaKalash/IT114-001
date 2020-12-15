@@ -168,7 +168,7 @@ public class Room implements AutoCloseable {
 							break;
 						}
 
-						// onIsMuted(clientName, client.isMuted(clientName));
+						//onIsMuted(clientName, client.isMuted(clientName));
 						client.send("System", clientName + " is now muted");
 						muted.send("System", "You were muted by " + client.getClientName());
 						client.saveMuted();
