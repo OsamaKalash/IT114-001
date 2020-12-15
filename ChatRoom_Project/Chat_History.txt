@@ -1,0 +1,36 @@
+<html>
+  <head>
+    
+  </head>
+  <body>
+    o: joined the room Lobby
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    o: hey
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    o: hello
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    o: whats up
+  </body>
+</html>
+

@@ -4,8 +4,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JEditorPane;
+import java.awt.Component;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.EOFException;
+import java.util.Scanner;
 
 public class ServerThread extends Thread {
 	private Socket client;
@@ -15,6 +24,43 @@ public class ServerThread extends Thread {
 	private Room currentRoom;// what room we are in, should be lobby by default
 	private String clientName;
 	private final static Logger log = Logger.getLogger(ServerThread.class.getName());
+	public List<String> mutedUsers = new ArrayList<String>();
+
+	File muteFile = new File("Muted_Users.txt");
+
+	public boolean isMuted(String clientName) {
+		return mutedUsers.contains(clientName);
+	}
+	
+	public void saveMuted() {
+		String data = clientName + ":" + String.join(",", mutedUsers);
+
+		try {
+			FileWriter writer = new FileWriter("Muted_Users.txt");
+			writer.append(data + System.lineSeparator());
+			writer.close();
+
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+	}
+
+	public void loadMuted() {
+		String line = "";
+		try {
+			Scanner reader = new Scanner(muteFile);
+			while (reader.hasNextLine()) {
+				line = reader.nextLine();
+			}
+			reader.close();
+			List<String> list = Arrays.asList(line.split(":"));
+			list.remove(0);
+			mutedUsers = list;
+
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+	}
 
 	public String getClientName() {
 		return clientName;
