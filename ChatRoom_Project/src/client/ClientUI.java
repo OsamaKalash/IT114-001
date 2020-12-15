@@ -176,7 +176,7 @@ public class ClientUI extends JFrame implements Event {
 		input.add(button);
 		panel.add(input, BorderLayout.SOUTH);
 		this.add(panel);
-		/*
+		
 		JButton expButton = new JButton("Export Chat");
 		expButton.addActionListener(new ActionListener() {
 
@@ -190,7 +190,7 @@ public class ClientUI extends JFrame implements Event {
 		
 		panel.add(input, BorderLayout.SOUTH);
 		this.add(panel);
-		*/
+		
 	}
 	
 	void createPanelUserList() {
@@ -351,7 +351,7 @@ public class ClientUI extends JFrame implements Event {
 		userPanel.setMaximumSize(lock);
 		setVisible(true);
 	}
-/*
+
 	void exportChat() {
 		StringBuilder sb = new StringBuilder();
 		Component[] components = textArea.getComponents();
@@ -372,7 +372,7 @@ public class ClientUI extends JFrame implements Event {
 			ie.printStackTrace();
 		}
 	}
-*/
+
 	@Override
 	public void onClientConnect(String clientName, String message) {
 		log.log(Level.INFO, String.format("%s: %s", clientName, message));
