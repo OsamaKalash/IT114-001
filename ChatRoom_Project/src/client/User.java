@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class User extends JPanel {
-	private String name;
+	public String name;
 	private JTextField nameField;
 
 	public User(String name) {
@@ -20,4 +20,5 @@ public class User extends JPanel {
 	public String getName() {
 		return name;
 	}
+
 }
