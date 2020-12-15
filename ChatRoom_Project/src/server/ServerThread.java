@@ -31,7 +31,7 @@ public class ServerThread extends Thread {
 	public boolean isMuted(String clientName) {
 		return mutedUsers.contains(clientName);
 	}
-	/*
+	
 	public void saveMuted() {
 		String data = clientName + ":" + String.join(",", mutedUsers);
 
@@ -61,7 +61,7 @@ public class ServerThread extends Thread {
 			ie.printStackTrace();
 		}
 	}
-*/
+
 	public String getClientName() {
 		return clientName;
 	}

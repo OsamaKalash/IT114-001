@@ -171,7 +171,7 @@ public class Room implements AutoCloseable {
 						// onIsMuted(clientName, client.isMuted(clientName));
 						client.send("System", clientName + " is now muted");
 						muted.send("System", "You were muted by " + client.getClientName());
-						//client.saveMuted();
+						client.saveMuted();
 
 					} else {
 						client.send("System", "That user is already muted!");
@@ -193,7 +193,7 @@ public class Room implements AutoCloseable {
 						// client.onIsMuted(clientName, client.isMuted(clientName));
 						client.send("System", clientName + " is now unmuted");
 						unmuted.send("System", "You were unmuted by " + client.getClientName());
-						//client.saveMuted();
+						client.saveMuted();
 					} else {
 						client.send("System", "That user is not muted!");
 					}
